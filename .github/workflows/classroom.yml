@@ -1,0 +1,31 @@
+name: Autograding Tests
+'on':
+- push
+- repository_dispatch
+permissions:
+  checks: write
+  actions: read
+  contents: read
+jobs:
+  run-autograding-tests:
+    runs-on: ubuntu-latest
+    if: github.actor != 'github-classroom[bot]'
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    - name: Check50
+      id: check50
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: Check50
+        setup-command: curl -sSL "https://raw.githubusercontent.com/Clube-de-Robotica-CMR/Check50/refs/heads/main/pset2/substituir/check.py"
+          -o check.py
+        command: python3 check.py
+        timeout: 2
+        max-score: 1
+    - name: Autograding Reporter
+      uses: classroom-resources/autograding-grading-reporter@v1
+      env:
+        CHECK50_RESULTS: "${{steps.check50.outputs.result}}"
+      with:
+        runners: check50
