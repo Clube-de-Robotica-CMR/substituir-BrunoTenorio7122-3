@@ -5,7 +5,6 @@
 
 int main(int argc, string argv[])
 {
-    int key = 0;
 
     if (argc != 2)
     {
@@ -13,20 +12,31 @@ int main(int argc, string argv[])
         return 1;
     }
 
-    for (int i = 0; i < (int) strlen(argv[1]); i++)
+    if(strlen(argv[1]) != 26)
     {
-        if (!isupper(argv[1][i]))
+        printf("Como usar: ./substituir key\n");
+        return 1;
+    }
+
+    for (int i = 0; i < 26; i++)
+    {
+        if (!isalpha(argv[1][i]))
         {
             printf("Como usar: ./substituir key\n");
             return 1;
         }
-        key += 1;
-    }
 
-    if(key != 26)
-    {
-        printf("Como usar: ./substituir key\n");
-        return 1;
+        else
+        {
+            for (int j = i + 1; j < 26; j++)
+            {
+                if ((int) toupper(argv[1][i]) == (int) toupper(argv[1][j]))
+                {
+                    printf("Como usar: ./substituir key\n");
+                    return 1;
+                }
+            }
+        }
     }
 
     string plaintext = get_string("plaintext: ");
@@ -43,7 +53,7 @@ int main(int argc, string argv[])
             if (isupper(plaintext[i]))
             {
                 posição_mod = ((int) plaintext[i]) % 65;
-                cripto = argv[1][posição_mod];
+                cripto = toupper(argv[1][posição_mod]);
                 
                 printf("%c", cripto);
             }
@@ -51,7 +61,7 @@ int main(int argc, string argv[])
             else if (islower(plaintext[i]))
             {
                 posição_mod = ((int) plaintext[i]) % 97;
-                cripto = argv[1][posição_mod];
+                cripto = toupper(argv[1][posição_mod]);
 
                 printf("%c", cripto + 32);
             }
